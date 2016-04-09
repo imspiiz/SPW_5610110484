@@ -1,16 +1,24 @@
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
-import java.awt.Color;
 
-public class Blackwindows {
+public class Main{
+
 	public static void main(String[] args){
+		
 		JFrame frame = new JFrame("Black window");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(400, 650);
 		frame.getContentPane().setLayout(new BorderLayout());
-		frame.getContentPane().setBackground(Color.black);
-	
+
+		SpaceShip v = new SpaceShip(180, 550, 40, 40);
+		Panel gp = new Panel(v);
+		gp.gUI();
+
+		frame.getContentPane().add(gp, BorderLayout.CENTER);
 		frame.setVisible(true);
-		
-	}
+	}	
+
+	
 }
+
+
