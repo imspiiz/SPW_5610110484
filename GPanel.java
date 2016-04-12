@@ -4,23 +4,24 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
-public class Panel extends JPanel {
+public class GPanel extends JPanel {
 	
 	private BufferedImage bi;
 	private SpaceShip sp;	
     Graphics2D big;
 
-	public Panel(SpaceShip sp) {
+	public GPanel(SpaceShip sp) {
 		this.sp = sp;
 		bi = new BufferedImage(400, 650, BufferedImage.TYPE_INT_ARGB);
 		big = (Graphics2D) bi.getGraphics();
 		big.setBackground(Color.BLACK);
 	}
 
-	public void gUI(){
+	public void updateGameUI(){
 		big.clearRect(0, 0, 400, 650);
 		sp.paint(big);
-		
+
+		repaint();
 	}
 	public void paint(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
