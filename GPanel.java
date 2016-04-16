@@ -3,11 +3,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
+import java.util.ArrayList;
 
 public class GPanel extends JPanel {
 	
 	private BufferedImage bi;
-	private SpaceShip sp;	
+	private SpaceShip sp;		
     Graphics2D big;
 
 	public GPanel(SpaceShip sp) {
@@ -17,9 +18,12 @@ public class GPanel extends JPanel {
 		big.setBackground(Color.BLACK);
 	}
 
-	public void updateGameUI(){
+	public void updateGameUI(ArrayList<Enemy> enemies){
 		big.clearRect(0, 0, 400, 650);
 		sp.paint(big);
+		for(Enemy s : enemies){
+			s.paint(big);
+		}
 
 		repaint();
 	}

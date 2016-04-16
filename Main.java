@@ -15,8 +15,6 @@ public class Main{
 		GEngine eg = new GEngine(gp, v);
 		frame.addKeyListener(eg);
 
-		gp.updateGameUI();
-
 		frame.getContentPane().add(gp, BorderLayout.CENTER);
 		frame.setVisible(true);
 		eg.start();
