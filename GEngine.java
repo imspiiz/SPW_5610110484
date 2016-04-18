@@ -8,13 +8,13 @@ import java.util.Iterator;
 import javax.swing.Timer;
 
 
-public class GEngine implements KeyListener{
+public class GEngine implements KeyListener, GReport{
     
-    GPanel gp;
+    private GPanel gp;
     private ArrayList<Enemy> enemies = new ArrayList<Enemy>();
     private SpaceShip v;
     private Timer timer;   
-
+    private long score = 0;
     private double difficulty = 0.1;
     
     public GEngine(GPanel gp, SpaceShip v) {
@@ -32,7 +32,7 @@ public class GEngine implements KeyListener{
     }
 
     private void generateEnemy(){
-        Enemy e = new Enemy((int)(Math.random()*390), 30);
+        Enemy e = new Enemy((int)(Math.random()*390), 10);
         enemies.add(e);
     }
 
@@ -49,10 +49,16 @@ public class GEngine implements KeyListener{
         Iterator<Enemy> e_iter = enemies.iterator();
         while(e_iter.hasNext()){
             Enemy e = e_iter.next();
-            e.proceed();
+            e.eMove();
+
+            if(!e.isAlive()){
+                e_iter.remove();
+                enemies.remove(e);
+                score += 50;
+            }
         }
 
-        gp.updateGameUI(enemies);
+        gp.updateGameUI(enemies, this);
     }
 
     void controlVehicle(KeyEvent e) {
@@ -72,6 +78,10 @@ public class GEngine implements KeyListener{
                 break;
          }
     } 
+
+    public long getScore(){
+        return score;
+    }
 
     @Override
     public void keyPressed(KeyEvent e) {

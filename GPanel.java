@@ -8,7 +8,8 @@ import java.util.ArrayList;
 public class GPanel extends JPanel {
 	
 	private BufferedImage bi;
-	private SpaceShip sp;		
+	private SpaceShip sp;	
+
     Graphics2D big;
 
 	public GPanel(SpaceShip sp) {
@@ -18,9 +19,12 @@ public class GPanel extends JPanel {
 		big.setBackground(Color.BLACK);
 	}
 
-	public void updateGameUI(ArrayList<Enemy> enemies){
+	public void updateGameUI(ArrayList<Enemy> enemies, GReport reporter){
 		big.clearRect(0, 0, 400, 650);
+		big.setColor(Color.WHITE);
+		big.drawString(String.format("%07d", reporter.getScore()), 300, 20);
 		sp.paint(big);
+
 		for(Enemy s : enemies){
 			s.paint(big);
 		}
