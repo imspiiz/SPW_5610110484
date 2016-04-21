@@ -1,22 +1,19 @@
 import java.awt.Graphics;
 import java.awt.Color;
 
-public class Enemy{
+public class Enemy extends Sprite{
 
-	private int x;
-	private int y;
 	public static final int Y_DIE = 650;
 	private boolean alive = true;
 	int step = 12;
 	
 	public Enemy(int x, int y) {
-		this.x = x;
-		this.y = y;
+		super(x, y, 7, 10);
 	}
 
-	public void paint (Graphics g) {    
+	public void paint(Graphics g) {    
 		g.setColor(Color.YELLOW);
-    	g.fillRect(x, y, 7, 10);   
+    	g.fillRect(x, y, width, height);   
 	}
 
 	public void eMove(){
@@ -25,6 +22,10 @@ public class Enemy{
 		if(y > Y_DIE){
 			alive = false;
 		}
+	}
+
+	public void dead(){
+		this.alive = false;
 	}
 
 	public boolean isAlive(){

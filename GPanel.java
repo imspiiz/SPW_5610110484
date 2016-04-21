@@ -8,33 +8,31 @@ import java.util.ArrayList;
 public class GPanel extends JPanel {
 	
 	private BufferedImage bi;
-	private SpaceShip sp;	
-
     Graphics2D big;
 
-	public GPanel(SpaceShip sp) {
-		this.sp = sp;
+    ArrayList<Sprite> sprites = new ArrayList<Sprite>();
+
+	public GPanel() {
 		bi = new BufferedImage(400, 650, BufferedImage.TYPE_INT_ARGB);
 		big = (Graphics2D) bi.getGraphics();
 		big.setBackground(Color.BLACK);
 	}
 
-	public void updateGameUI(ArrayList<Enemy> enemies, GReport reporter){
+	public void updateGameUI(GReport reporter){
 		big.clearRect(0, 0, 400, 650);
 		big.setColor(Color.WHITE);
-		big.drawString(String.format("%07d", reporter.getScore()), 300, 20);
-		sp.paint(big);
+		big.drawString("HP", 10, 20);
+		big.drawString(String.format("%07d", reporter.getScore()), 320, 20);
 
-		for(Enemy s : enemies){
+		for(Sprite s : sprites){
 			s.paint(big);
 		}
 
 		repaint();
 	}
+	
 	public void paint(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.drawImage(bi, null, 0, 0);
 	}
-
-
 }

@@ -13,14 +13,17 @@ public class GEngine implements KeyListener, GReport{
     private GPanel gp;
     private ArrayList<Enemy> enemies = new ArrayList<Enemy>();
     private SpaceShip v;
+    private Health hp;
     private Timer timer;   
     private long score = 0;
+    //private int hp_val = 100;
     private double difficulty = 0.1;
     
     public GEngine(GPanel gp, SpaceShip v) {
         this.gp = gp;
         this.v = v;      
-
+        gp.sprites.add(v);
+        initHP();
         timer = new Timer(50, new ActionListener() {
             
             @Override
@@ -30,9 +33,14 @@ public class GEngine implements KeyListener, GReport{
         });
         timer.setRepeats(true);     
     }
-
+    private void initHP(){
+        hp = new Health(100);
+        gp.sprites.add(hp);
+    }
+    
     private void generateEnemy(){
         Enemy e = new Enemy((int)(Math.random()*390), 10);
+        gp.sprites.add(e);
         enemies.add(e);
     }
 
@@ -41,7 +49,11 @@ public class GEngine implements KeyListener, GReport{
     }
 
     private void process(){
-       
+
+        if(hp.getHP() == 0){
+            die();
+        }
+
         if(Math.random() < difficulty){
             generateEnemy();
         }
@@ -53,12 +65,31 @@ public class GEngine implements KeyListener, GReport{
 
             if(!e.isAlive()){
                 e_iter.remove();
-                enemies.remove(e);
+                gp.sprites.remove(e);
                 score += 50;
             }
         }
 
-        gp.updateGameUI(enemies, this);
+        gp.updateGameUI(this);
+
+        Rectangle2D.Double obj_v = v.getRectangle();
+        Rectangle2D.Double obj_e;
+        for(Enemy e : enemies){
+            obj_e = e.getRectangle();
+            if(obj_e.intersects(obj_v)){
+                e.dead();
+                hit();
+                return;
+            }
+        }
+    }
+
+    public void hit(){
+        hp.dec_hp();
+    }
+
+    public void die(){
+        timer.stop();
     }
 
     void controlVehicle(KeyEvent e) {

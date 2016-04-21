@@ -1,22 +1,15 @@
 import java.awt.Graphics;
 import java.awt.Color;
 
-public class SpaceShip{
+public class SpaceShip extends Sprite{
 
-	private int x;
-	private int y;
-	private int width;
-	private int height;
-	int step = 8;
+	int step = 15;
 	
 	public SpaceShip(int x, int y, int width, int height) {
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
+		super(x, y, width, height);
 	}
 
-	public void paint (Graphics g) {    
+	public void paint(Graphics g) {    
 		g.setColor(Color.RED);
     	g.fillRect(x, y, width, height);   
 	}
@@ -28,6 +21,7 @@ public class SpaceShip{
 		if(x > 400 - width)
 			x = 400 - width;
 	}
+	
 	public void moveY(int direction){
 		y += (step * direction);
 		if(y < 0)

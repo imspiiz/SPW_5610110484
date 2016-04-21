@@ -11,7 +11,7 @@ public class Main{
 		frame.getContentPane().setLayout(new BorderLayout());
 
 		SpaceShip v = new SpaceShip(180, 550, 40, 40);
-		GPanel gp = new GPanel(v);
+		GPanel gp = new GPanel();
 		GEngine eg = new GEngine(gp, v);
 		frame.addKeyListener(eg);
 
