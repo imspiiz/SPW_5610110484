@@ -7,16 +7,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.Timer;
 
-
 public class GEngine implements KeyListener, GReport{
     
     private GPanel gp;
     private ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+    private ArrayList<Item> items = new ArrayList<Item>();
     private SpaceShip v;
     private Health hp;
     private Timer timer;   
     private long score = 0;
-    //private int hp_val = 100;
     private double difficulty = 0.1;
     
     public GEngine(GPanel gp, SpaceShip v) {
@@ -39,9 +38,15 @@ public class GEngine implements KeyListener, GReport{
     }
     
     private void generateEnemy(){
-        Enemy e = new Enemy((int)(Math.random()*390), 10);
+        Enemy e = new Enemy((int)(Math.random() * 400), 10);
         gp.sprites.add(e);
         enemies.add(e);
+    }
+
+    private void generateItem(){
+        Item itm = new Item((int)(Math.random() * 400), 10);
+        gp.sprites.add(itm);
+        items.add(itm);
     }
 
     public void start(){
@@ -54,10 +59,16 @@ public class GEngine implements KeyListener, GReport{
             die();
         }
 
+        // ---------------- Generate --------------- //
         if(Math.random() < difficulty){
             generateEnemy();
         }
 
+        if(Math.random() * 400 < 2){
+            generateItem();
+        }
+
+        // --------------- Iterator --------------- //
         Iterator<Enemy> e_iter = enemies.iterator();
         while(e_iter.hasNext()){
             Enemy e = e_iter.next();
@@ -70,10 +81,21 @@ public class GEngine implements KeyListener, GReport{
             }
         }
 
-        gp.updateGameUI(this);
+        Iterator<Item> itm_iter = items.iterator();
+        while( itm_iter.hasNext()){
+            Item itm = itm_iter.next();
+            itm.itmMove();
 
+            if(!itm.isGet()){
+                itm_iter.remove();
+                gp.sprites.remove(itm);
+            }
+        }
+
+        // -------------- Intersects -------------- //
         Rectangle2D.Double obj_v = v.getRectangle();
         Rectangle2D.Double obj_e;
+        Rectangle2D.Double obj_itm;
         for(Enemy e : enemies){
             obj_e = e.getRectangle();
             if(obj_e.intersects(obj_v)){
@@ -82,10 +104,25 @@ public class GEngine implements KeyListener, GReport{
                 return;
             }
         }
+
+        for(Item itm : items){
+            obj_itm = itm.getRectangle();
+            if(obj_itm.intersects(obj_v)){
+                itm.getItem();
+                buf();
+                return;
+            }
+        }
+
+        gp.updateGameUI(this);
     }
 
     public void hit(){
         hp.dec_hp();
+    }
+
+    public void buf(){
+        hp.inc_hp();
     }
 
     public void die(){
@@ -106,6 +143,10 @@ public class GEngine implements KeyListener, GReport{
                 break;
             case KeyEvent.VK_RIGHT :
                 v.moveX(1);
+                break;
+            case KeyEvent.VK_N :
+                start();
+                initHP();
                 break;
          }
     } 
