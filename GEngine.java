@@ -16,14 +16,18 @@ public class GEngine implements KeyListener, GReport{
     private Health hp;
     private Timer timer;   
     private long score = 0;
-    private double difficulty = 0.1;
+    private int status = 0;
+    private int level = 1;
+    private int speed = 50;
+    private double difficulty;
+    private boolean genItem = true; 
     
     public GEngine(GPanel gp, SpaceShip v) {
         this.gp = gp;
         this.v = v;      
         gp.sprites.add(v);
         initHP();
-        timer = new Timer(50, new ActionListener() {
+        timer = new Timer(speed, new ActionListener() {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
@@ -56,19 +60,23 @@ public class GEngine implements KeyListener, GReport{
     private void process(){
 
         if(hp.getHP() == 0){
-            die();
+            gameLose();
         }
 
-        // ---------------- Generate --------------- //
-        if(Math.random() < difficulty){
-            generateEnemy();
+        scoreProcess();
+
+
+    // ---------------- Generate --------------- //
+        if(genItem){
+            if(Math.random() < difficulty){
+                generateEnemy();
+            }
+            if(Math.random() * 400 < 2){
+                generateItem();
+            }   
         }
 
-        if(Math.random() * 400 < 2){
-            generateItem();
-        }
-
-        // --------------- Iterator --------------- //
+    // --------------- Iterator --------------- //
         Iterator<Enemy> e_iter = enemies.iterator();
         while(e_iter.hasNext()){
             Enemy e = e_iter.next();
@@ -92,7 +100,7 @@ public class GEngine implements KeyListener, GReport{
             }
         }
 
-        // -------------- Intersects -------------- //
+    // -------------- Intersects -------------- //
         Rectangle2D.Double obj_v = v.getRectangle();
         Rectangle2D.Double obj_e;
         Rectangle2D.Double obj_itm;
@@ -114,7 +122,38 @@ public class GEngine implements KeyListener, GReport{
             }
         }
 
-        gp.updateGameUI(this);
+        gp.updateGameUI(this, status);
+    }
+
+    private void scoreProcess(){
+        if(score >= 100000){
+            gameWin();
+        }
+        if(score < 10000){
+            level = 1;
+            difficulty = 0.2;
+            speed = 45;
+        } 
+        else if(score < 25000){
+            level = 2;
+            difficulty = 0.4;
+            speed = 40;
+        } 
+        else if(score < 45000){
+            level = 3;
+            difficulty = 0.6;
+            speed = 35;
+        } 
+        else if(score < 70000){
+            level = 4;
+            difficulty = 0.8;
+            speed = 30;
+        } 
+        else if(score < 100000){
+            level = 5;
+            difficulty = 1.0;
+            speed = 25;
+        } 
     }
 
     public void hit(){
@@ -125,8 +164,16 @@ public class GEngine implements KeyListener, GReport{
         hp.inc_hp();
     }
 
-    public void die(){
-        timer.stop();
+    public void gameWin(){
+        status = 1;
+        genItem = false;
+        timer.stop();   
+    }
+
+    public void gameLose(){
+        status = 2;
+        genItem = false;
+        timer.stop();   
     }
 
     void controlVehicle(KeyEvent e) {
@@ -144,15 +191,15 @@ public class GEngine implements KeyListener, GReport{
             case KeyEvent.VK_RIGHT :
                 v.moveX(1);
                 break;
-            case KeyEvent.VK_N :
-                start();
-                initHP();
-                break;
          }
     } 
 
     public long getScore(){
         return score;
+    }
+
+    public int getLevel(){
+        return level;
     }
 
     @Override
@@ -169,8 +216,6 @@ public class GEngine implements KeyListener, GReport{
     public void keyTyped(KeyEvent e) {
         //do nothing        
     }
-
-
 }
 
 
