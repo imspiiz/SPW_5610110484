@@ -8,12 +8,13 @@ public class Enemy extends Sprite{
 	int step = 12;
 	
 	public Enemy(int x, int y) {
-		super(x, y, 7, 10);
+		super(x, y, 30, 45);
+		this.setImage("pic/enemy.png");
 	}
-
-	public void paint(Graphics g) {    
-		g.setColor(Color.YELLOW);
-    	g.fillRect(x, y, width, height);   
+	
+	@Override
+	public void paint(Graphics g) {
+		g.drawImage(this.image, x, y, width, height, null);
 	}
 
 	public void eMove(){

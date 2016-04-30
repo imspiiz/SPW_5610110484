@@ -2,24 +2,36 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import java.util.ArrayList;
 
 public class GPanel extends JPanel {
 	
 	private BufferedImage bi;
+	private Image imageBg;
     Graphics2D big;
 
     ArrayList<Sprite> sprites = new ArrayList<Sprite>();
 
 	public GPanel() {
 		bi = new BufferedImage(400, 650, BufferedImage.TYPE_INT_ARGB);
+		try {
+			File sourceImageBg = new File("pic/background.png");
+			imageBg = ImageIO.read(sourceImageBg);
+		}catch (IOException e) {
+        	e.printStackTrace();
+        }
+
 		big = (Graphics2D) bi.getGraphics();
-		big.setBackground(Color.BLACK);
 	}
 
 	public void updateGameUI(GReport reporter, int status){
 		big.clearRect(0, 0, 400, 650);
+		big.drawImage(imageBg, 0, 0, null);
 		big.setColor(Color.WHITE);
 
 		switch (status){
@@ -64,7 +76,7 @@ public class GPanel extends JPanel {
 		big.setFont(big.getFont().deriveFont(18F)); 
 		big.drawString(String.format("Your score: %d", reporter.getScore()), 130, 350);
 	}
-	
+	@Override
 	public void paint(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.drawImage(bi, null, 0, 0);

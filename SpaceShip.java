@@ -7,11 +7,12 @@ public class SpaceShip extends Sprite{
 	
 	public SpaceShip(int x, int y, int width, int height) {
 		super(x, y, width, height);
+		this.setImage("pic/spaceship.png");
 	}
-
-	public void paint(Graphics g) {    
-		g.setColor(Color.RED);
-    	g.fillRect(x, y, width, height);   
+	
+	@Override
+	public void paint(Graphics g) {
+		g.drawImage(this.image, x, y, width, height, null);
 	}
 
 	public void moveX(int direction){

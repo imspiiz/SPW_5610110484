@@ -12,6 +12,8 @@ public class GEngine implements KeyListener, GReport{
     private GPanel gp;
     private ArrayList<Enemy> enemies = new ArrayList<Enemy>();
     private ArrayList<Item> items = new ArrayList<Item>();
+    private ArrayList<Bullet> bullets = new ArrayList<Bullet>();
+
     private SpaceShip v;
     private Health hp;
     private Timer timer;   
@@ -40,7 +42,7 @@ public class GEngine implements KeyListener, GReport{
         hp = new Health(100);
         gp.sprites.add(hp);
     }
-    
+    // ---------------- Setup Generate --------------- //
     private void generateEnemy(){
         Enemy e = new Enemy((int)(Math.random() * 400), 10);
         gp.sprites.add(e);
@@ -51,6 +53,12 @@ public class GEngine implements KeyListener, GReport{
         Item itm = new Item((int)(Math.random() * 400), 10);
         gp.sprites.add(itm);
         items.add(itm);
+    }
+
+    private void generateBullet(){
+        Bullet b = new Bullet(v.x + (v.width / 2) - 2, v.y);
+        gp.sprites.add(b);
+        bullets.add(b);
     }
 
     public void start(){
@@ -64,6 +72,7 @@ public class GEngine implements KeyListener, GReport{
         }
 
         scoreProcess();
+        bulletProcess();
 
 
     // ---------------- Generate --------------- //
@@ -104,6 +113,8 @@ public class GEngine implements KeyListener, GReport{
         Rectangle2D.Double obj_v = v.getRectangle();
         Rectangle2D.Double obj_e;
         Rectangle2D.Double obj_itm;
+        Rectangle2D.Double obj_bullet;
+
         for(Enemy e : enemies){
             obj_e = e.getRectangle();
             if(obj_e.intersects(obj_v)){
@@ -121,6 +132,21 @@ public class GEngine implements KeyListener, GReport{
                 return;
             }
         }
+
+        for(Bullet b : bullets){
+            for(Enemy e : enemies){
+                obj_bullet = b.getRectangle();
+                obj_e = e.getRectangle();
+                if(obj_bullet.intersects(obj_e)){
+                    b.shoot();
+                    e.dead();
+                    b.isShoot();
+                    return;
+                }
+            }
+        }
+
+
 
         gp.updateGameUI(this, status);
     }
@@ -154,6 +180,19 @@ public class GEngine implements KeyListener, GReport{
             difficulty = 1.0;
             speed = 25;
         } 
+    }
+
+    private void bulletProcess(){
+        Iterator<Bullet> b_iter = bullets.iterator();
+        while(b_iter.hasNext()){
+            Bullet b = b_iter.next();
+            b.bMove();
+            
+            if(!b.isShoot()){
+                b_iter.remove();
+                gp.sprites.remove(b);
+            }
+        }
     }
 
     public void hit(){
@@ -190,6 +229,9 @@ public class GEngine implements KeyListener, GReport{
                 break;
             case KeyEvent.VK_RIGHT :
                 v.moveX(1);
+                break;
+            case KeyEvent.VK_SPACE:
+                generateBullet();
                 break;
          }
     } 

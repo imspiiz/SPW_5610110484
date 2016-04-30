@@ -8,12 +8,13 @@ public class Item extends Sprite{
 	int step = 18;
 	
 	public Item(int x, int y) {
-		super(x, y, 12, 12);
+		super(x, y, 25, 25);
+		this.setImage("pic/health.png");
 	}
-
-	public void paint(Graphics g) {    
-		g.setColor(Color.GREEN);
-    	g.fillRect(x, y, width, height);   
+	
+	@Override
+	public void paint(Graphics g) {
+		g.drawImage(this.image, x, y, width, height, null);
 	}
 
 	public void itmMove(){
