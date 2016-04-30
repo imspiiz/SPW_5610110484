@@ -42,7 +42,6 @@ public class GPanel extends JPanel {
 			case 2: drawLose(reporter);
 				break;
 		}
-
 		repaint();
 	}
 

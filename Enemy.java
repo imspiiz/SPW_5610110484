@@ -3,7 +3,7 @@ import java.awt.Color;
 
 public class Enemy extends Sprite{
 
-	public static final int Y_DIE = 650;
+	public static final int Y_DIE = 600;
 	private boolean alive = true;
 	int step = 12;
 	

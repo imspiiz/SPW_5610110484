@@ -1,24 +1,19 @@
 import java.awt.Graphics;
 import java.awt.Color;
 
-public class Health extends Sprite {
+public class BossHealth extends Sprite {
 	
-	public Health(int width) {
-		super(32, 11, width, 10);
+	public BossHealth(int width) {
+		super(32, 25, width, 10);
 	}
 
 	public void paint (Graphics g) {    
-		g.setColor(Color.BLUE);
+		g.setColor(Color.RED);
     	g.fillRect(x, y, width, height);   
 	}
 
     public void dec_hp(){
-        width -= 10;
-    }
-
-    public void inc_hp(){
-    	if(width != 200)
-        	width += 20;
+        width -= 5;
     }
 
     public int getHP(){
